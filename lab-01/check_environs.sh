@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+SERVER_NAME="${SERVER_NAME:-StarCraft}"
+MAX_PLAYERS="${MAX_PLAYERS:-125}"
+SPAWN_COORDS="${SPAWN_COORDS:-274 67 -249}"
+
+cat << EOF > server.conf
+SERVER_NAME="$SERVER_NAME"
+MAX_PLAYERS=$MAX_PLAYERS
+SPAWN_COORDS="$SPAWN_COORDS"
+EOF
+
+cat server.conf
