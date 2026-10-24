@@ -41,6 +41,10 @@ while [[ $# -gt 0 ]]; do
 	esac
 done
 
+PLAYERS_FILE="${PLAYERS_FILE:-players.txt}"
+BANLIST_FILE="${BANLIST_FILE:-banlist.txt}"
+TRANS_FILE="${TRANS_FILE:-transactions.log}"
+
 touch "$LOCKFILE"
 
 players_count=$(wc -l < "$PLAYERS_FILE" | tr -d ' ')
