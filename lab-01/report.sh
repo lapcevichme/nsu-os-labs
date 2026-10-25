@@ -3,11 +3,6 @@
 LOCKFILE="report.lock"
 REPORTFILE="report.txt"
 
-if [[ -f "$LOCKFILE" ]]; then
-	echo "Report in progress" >&2
-	exit 1
-fi
-
 cleanup() {
 	echo "Reporting was interrupted" >&2
 	# я бы если честно репорт не удалял тут, но такие требования(
@@ -24,14 +19,26 @@ while [[ $# -gt 0 ]]; do
 			exit 0
 			;;
 		-p|--players)
+			if [[ -z "${2:-}" ]]; then
+				echo "Error: $1 requires an argument" >&2
+				exit 1
+			fi
 			PLAYERS_FILE="$2"
 			shift 2
 			;;
 		-b|--banlist)
+			if [[ -z "${2:-}" ]]; then
+				echo "Error: $1 requires an argument" >&2
+				exit 1
+			fi
 			BANLIST_FILE="$2"
 			shift 2
 			;;
 		-t|--transactions)
+			if [[ -z "${2:-}" ]]; then
+				echo "Error: $1 requires an argument" >&2
+				exit 1
+			fi
 			TRANS_FILE="$2"
 			shift 2
 			;;
@@ -44,6 +51,11 @@ done
 PLAYERS_FILE="${PLAYERS_FILE:-players.txt}"
 BANLIST_FILE="${BANLIST_FILE:-banlist.txt}"
 TRANS_FILE="${TRANS_FILE:-transactions.log}"
+
+if [[ -f "$LOCKFILE" ]]; then
+	echo "Report in progress" >&2
+	exit 1
+fi
 
 touch "$LOCKFILE"
 

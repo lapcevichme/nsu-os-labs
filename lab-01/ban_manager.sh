@@ -10,10 +10,13 @@ format() {
 }
 
 add() {
+	local entry
 	if [[ $# -eq 1 ]]; then
-		local entry="$1"
-	elif [[ $# -eq 3 ]]; then
-		local entry="$1 $2 $3"
+		entry="$1"
+	elif [[ $# -ge 3 ]]; then
+		entry="$1 $2 ${*:3}"
+	else
+		return 1
 	fi
 	
 	local nickname
@@ -21,7 +24,7 @@ add() {
 	
 	touch "$BANLIST"
 	
-	if ! grep -q "^$nickname " "$BANLIST"; then
+	if [[ -z "$(sed -n "/^$nickname /p" "$BANLIST")" ]]; then
 		echo "$entry" >> "$BANLIST"
 	fi
 }
