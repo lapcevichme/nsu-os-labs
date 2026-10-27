@@ -44,16 +44,18 @@ sort() {
 	local outfile="$2"
 
 	case "$mode" in
-	    --name)
-		command sort -k 1,1 "$BANLIST" -o "$outfile"
-		;;
-	    --time)
-		command sort -k 2,2 "$BANLIST" -o "$outfile"
-		;;
-	    *)
-		echo "Unknown option: $mode" >&2
-		return 1
-		;;
+		--name)
+			command sort -k 1,1 "$BANLIST" -o "$outfile"
+			;;
+		--time)
+			# command sort -k 2,2 "$BANLIST" -o "$outfile"
+			command sort -t ' ' -k 2.7,2.10n -k 2.4,2.5n -k 2.1,2.2n "$BANLIST" -o "$outfile"
+			# дата у нас dd.mm.yyyy, Она простой сортировкой не пройдет.
+			;;
+		*)
+			echo "Unknown option: $mode" >&2
+			return 1
+			;;
 	esac
 }
 
