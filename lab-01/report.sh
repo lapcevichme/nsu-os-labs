@@ -59,9 +59,9 @@ fi
 
 touch "$LOCKFILE"
 
-players_count=$(wc -l < "$PLAYERS_FILE" | tr -d ' ')
-bans_count=$(wc -l < "$BANLIST_FILE" | tr -d ' ')
-trans_count=$(wc -l < "$TRANS_FILE" | tr -d ' ')
+players_count=$(grep -c '[^[:space:]]' "$PLAYERS_FILE" || true)
+bans_count=$(grep -c '[^[:space:]]' "$BANLIST_FILE" || true)
+trans_count=$(grep -c '[^[:space:]]' "$TRANS_FILE" || true)
 top_item=$(awk '{print $5}' "$TRANS_FILE" | sort | uniq -c | sort -nr | head -n1 | awk '{print $2}')
 
 cat << EOF > "$REPORTFILE"
