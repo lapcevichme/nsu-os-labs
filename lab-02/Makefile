@@ -1,19 +1,37 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -O2 -Iinclude
+CFLAGS = -Wall -Wextra -O2 -Iinclude -MMD -MP
 
-SRCS = src/main.c src/add.c src/sub.c src/utility/stats.c
+TARGET = build/prog
+
+SRCS = $(shell find src -type f -name '*.c')
 
 OBJS = $(SRCS:src/%.c=build/%.o)
 
-all: build/prog
+DEPS = $(OBJS:.o=.d)
 
-build/prog: $(OBJS)
-	@mkdir -p build
+OBJ_DIRS = $(sort $(dir $(OBJS)))
+
+.PHONY: all clean test
+
+ifneq ($(filter clean,$(MAKECMDGOALS)),)
+  $(filter-out clean,$(MAKECMDGOALS)): | clean
+endif
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS) | $(OBJ_DIRS)
 	$(CC) $(CFLAGS) $^ -o $@
 
-build/%.o: src/%.c
-	@mkdir -p $(dir $@)
+build/%.o: src/%.c | $(OBJ_DIRS)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(OBJ_DIRS):
+	@mkdir -p $@
 
 clean:
 	rm -rf build
+
+test: $(TARGET)
+	@tests/test.sh
+
+-include $(DEPS)
